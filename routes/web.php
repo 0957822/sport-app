@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+//use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// routes/web.php
 
-Route::get('/hello', [App\Http\Controllers\HelloController::class, 'index']);
+use App\Http\Controllers\HomeController;
+
+Route::get('/', [App\Http\Controllers\HelloController::class, 'index']);
+

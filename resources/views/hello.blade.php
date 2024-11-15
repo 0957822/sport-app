@@ -6,6 +6,7 @@
     <title>Hello World</title>
 </head>
 <body>
-<h1>{{ $message }}</h1>
+<h1>Hello, World!</h1>
 </body>
 </html>
+
