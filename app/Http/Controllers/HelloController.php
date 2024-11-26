@@ -1,5 +1,7 @@
 <?php
 
+// app/Http/Controllers/HelloController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\Exercise;
