@@ -14,6 +14,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('image_path')->nullable();
             $table->foreignId('user_id')->constrained();
+            $table->json('tags')->nullable();
             $table->timestamps();
         });
     }
