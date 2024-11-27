@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-3xl font-bold mb-6">Exercises ({{ $count }})</h1>
-
+    <h1 class="text-3xl font-bold mb-6">Exercises</h1>
+    <p>Total amount of exercises: {{ $count }}</p>
+    <br>
     <!-- Tags filter -->
     <div class="mb-6">
         <h2 class="text-xl mb-3">Filter by tags:</h2>
