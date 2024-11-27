@@ -2,10 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use App\Models\Exercise;
+
 class ExercisesController extends Controller
 {
-    public function exercises()
+    public function exercises(Request $request)
     {
-        return view('exercises');
+        $query = Exercise::query();
+        $tags = ['Strength', 'Cardio', 'Flexibility', 'Balance', 'HIIT'];
+
+        if ($request->search) {
+            $query->where('title', 'like', "%{$request->search}%");
+        }
+
+        if ($request->tags) {
+            $selectedTags = explode(',', $request->tags);
+            foreach($selectedTags as $tag) {
+                $query->whereJsonContains('tags', $tag);
+            }
+        }
+
+        $exercises = $query->with('user')->get();
+        $count = $exercises->count();
+
+        return view('pages.exercises', compact('exercises', 'count', 'tags'));
     }
 }

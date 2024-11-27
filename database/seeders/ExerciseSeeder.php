@@ -39,5 +39,36 @@ class ExerciseSeeder extends Seeder
             'image_path' => 'images/pushup.jpg',
             'user_id' => $user->id
         ]);
+
+        // Define available tags
+        $tags = ['Strength', 'Cardio', 'Flexibility', 'Balance', 'HIIT'];
+
+        // Create multiple exercises with tags
+        $exercises = [
+            [
+                'title' => 'Push-ups',
+                'description' => 'A classic exercise for chest and arms strength.',
+                'image_path' => 'images/pushup.jpg',
+                'tags' => ['Strength', 'HIIT']
+            ],
+            [
+                'title' => 'Running',
+                'description' => 'Basic cardio exercise for endurance.',
+                'image_path' => 'images/running.jpg',
+                'tags' => ['Cardio']
+            ],
+            // Add more exercises as needed
+        ];
+
+        foreach ($exercises as $exercise) {
+            Exercise::create([
+                'title' => $exercise['title'],
+                'description' => $exercise['description'],
+                'image_path' => $exercise['image_path'],
+                'user_id' => $user->id,
+                'tags' => $exercise['tags']
+            ]);
+        }
     }
 }
+
