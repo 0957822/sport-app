@@ -28,4 +28,10 @@ class ExercisesController extends Controller
 
         return view('pages.exercises', compact('exercises', 'count', 'tags'));
     }
+
+    public function show($id)
+    {
+        $exercise = Exercise::with('user')->findOrFail($id);
+        return view('pages.exercise-details', compact('exercise'));
+    }
 }
