@@ -11,13 +11,13 @@
     <!-- Latest Exercise Box -->
     @if($latestExercise)
         <div class="box">
-            <h2>Latest Exercise</h2>
+            <h2 class="text-2xl font-bold mb-6">Latest Exercise</h2>
             @if($latestExercise->image_path)
                 <img src="{{ asset($latestExercise->image_path) }}" alt="Exercise" class="exercise-img">
             @endif
 
             <div class="exercise-content">
-                <h3>{{ $latestExercise->title }}</h3>
+                <h3 class="text-1xl font-bold mb-6">{{ $latestExercise->title }}</h3>
                 <p>{{ $latestExercise->description }}</p>
 
                 <div class="footer">

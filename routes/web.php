@@ -18,4 +18,7 @@ Route::get('/forgot-password', [PasswordResetController::class, 'create'])
     ->name('password.request');
 Route::get('/register', [RegistrationController::class, 'create'])->name('register');
 Route::post('/register', [RegistrationController::class, 'store'])->name('register.store');
-Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])
+    ->name('password.email');
+
+
