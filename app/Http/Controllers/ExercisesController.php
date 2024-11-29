@@ -34,4 +34,42 @@ class ExercisesController extends Controller
         $exercise = Exercise::with('user')->findOrFail($id);
         return view('pages.exercise-details', compact('exercise'));
     }
+
+    public function create()
+    {
+        if (!auth()->user()->canCreateExercise()) {
+            return redirect()->route('exercises')
+                ->with('error', 'You need to login at least 5 times before creating exercises.');
+        }
+
+        $tags = ['Compound', 'Isolation', 'Strength', 'HIIT', 'Yoga', 'Cardio', 'Stretch'];
+        return view('pages.exercises.create', compact('tags'));
+    }
+
+    public function store(Request $request)
+    {
+        if (!auth()->user()->canCreateExercise()) {
+            return redirect()->route('exercises');
+        }
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'tags' => ['required', 'array'],
+            'image' => ['required', 'image', 'max:2048'], // 2MB max
+        ]);
+
+        $imagePath = $request->file('image')->store('exercises', 'public');
+
+        $exercise = Exercise::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'tags' => $validated['tags'],
+            'image_path' => $imagePath,
+            'user_id' => auth()->id(),
+        ]);
+
+        return redirect()->route('exercises.show', $exercise)
+            ->with('success', 'Exercise created successfully!');
+    }
 }

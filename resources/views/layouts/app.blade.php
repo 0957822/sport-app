@@ -15,10 +15,10 @@
             <!-- Left side navigation -->
             <div class="flex items-center space-x-4">
                 <a href="{{ url('/') }}"
-                   class="text-2xl font-bold mb-1">
+                   class="text-gray-800 hover:text-blue-500">
                     Sportify
                 </a>
-                <a href="{{ url('/exercises') }}"
+                <a href="{{ route('exercises') }}"
                    class="text-gray-800 hover:text-blue-500">
                     Exercises
                 </a>
@@ -28,16 +28,48 @@
                 </a>
             </div>
 
+            <!-- Middle buttons (only shown when logged in) -->
+            @auth
+                <div class="flex items-center space-x-4">
+                    <a href="{{ route('profile') }}"
+                       class="text-gray-800 hover:text-blue-500">
+                        Profile
+                    </a>
+                    <a href="{{ route('exercises.create') }}"
+                       class="text-gray-800 hover:text-blue-500">
+                        Create
+                    </a>
+                </div>
+            @endauth
+
             <!-- Right side navigation -->
             <div class="flex items-center space-x-4">
-                <a href="{{ url('/login') }}"
-                   class="text-gray-800 hover:text-blue-500">
-                    Login
-                </a>
-                <a href="{{ url('/register') }}"
-                   class="text-gray-800 hover:text-blue-500">
-                    Register
-                </a>
+                @auth
+                    <div class="flex items-center space-x-2">
+                        <img src="{{ auth()->user()->avatar
+                        ? Storage::url(auth()->user()->avatar)
+                        : asset('avatars/default-avatar.jpg') }}"
+                             alt="Profile picture"
+                             class="w-8 h-8 rounded-full object-cover">
+                        <span class="text-gray-800">Hi, {{ auth()->user()->name }}</span>
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit"
+                                class="text-gray-800 hover:text-blue-500">
+                            Logout
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}"
+                       class="text-gray-800 hover:text-blue-500">
+                        Login
+                    </a>
+                    <a href="{{ route('register') }}"
+                       class="text-gray-800 hover:text-blue-500">
+                        Register
+                    </a>
+                @endauth
             </div>
         </div>
     </nav>

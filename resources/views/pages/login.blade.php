@@ -36,11 +36,6 @@
                             Remember me
                         </label>
                     </div>
-                    <div>
-                        <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:text-blue-500">
-                            Forgot password?
-                        </a>
-                    </div>
                 </div>
 
                 <div>
@@ -48,6 +43,12 @@
                             class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         Login
                     </button>
+                </div>
+
+                <div class="text-center">
+                    <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:text-blue-500">
+                        Forgot password?
+                    </a>
                 </div>
             </form>
         </div>

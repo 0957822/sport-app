@@ -17,12 +17,25 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    // app/Models/User.php
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'avatar'
+        'name', 'email', 'password', 'role', 'login_count', 'avatar'
     ];
+
+    public function canCreateExercise()
+    {
+        return $this->login_count >= 5;
+    }
+
+    public function exercises()
+    {
+        return $this->hasMany(Exercise::class);
+    }
+
+    public function savedExercises()
+    {
+        return $this->belongsToMany(Exercise::class, 'saved_exercises');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

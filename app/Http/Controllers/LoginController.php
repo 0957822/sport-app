@@ -24,12 +24,13 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
+        // Validate input
         $credentials = $request->validate([
             'email' => ['required', 'email'],
-            'password' => ['required'],
+            'password' => ['required']
         ]);
 
-        // Add rate limiting
+        // Check rate limiting
         if ($this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
             return $this->sendLockoutResponse($request);
@@ -38,26 +39,45 @@ class LoginController extends Controller
         // Remember me token with secure settings
         $remember = $request->boolean('remember');
 
-        if (Auth::attempt($credentials, $remember)) {
-            // Regenerate session securely
-            $request->session()->regenerate();
+        try {
+            if (Auth::attempt($credentials, $remember)) {
+                // Regenerate session securely
+                $request->session()->regenerate();
 
-            // Clear login attempts
-            $this->clearLoginAttempts($request);
+                // Get authenticated user
+                $user = Auth::user();
 
-            // If remember me was selected, ensure secure cookie settings
-            if ($remember) {
-                $rememberTokenCookie = Auth::guard()->getCookieJar()->forever(
-                    Auth::guard()->getRecallerName(),
-                    Auth::guard()->getRecallerCookie()
-                );
+                // Increment login count
+                $user->increment('login_count');
+                $user->save();
 
-                $rememberTokenCookie->secure(config('session.secure'));
-                $rememberTokenCookie->httpOnly(true);
-                $rememberTokenCookie->sameSite('lax');
+                // Clear login attempts
+                $this->clearLoginAttempts($request);
+
+                // Set secure cookie settings if remember me is selected
+                if ($remember) {
+                    $rememberTokenCookie = Auth::guard()->getCookieJar()->forever(
+                        Auth::guard()->getRecallerName(),
+                        Auth::guard()->getRecallerCookie()
+                    );
+
+                    $rememberTokenCookie->secure(config('session.secure'));
+                    $rememberTokenCookie->httpOnly(true);
+                    $rememberTokenCookie->sameSite('lax');
+                }
+
+                // Set last login timestamp
+                $user->update(['last_login' => now()]);
+
+                // Redirect to profile page
+                return redirect()->route('profile')
+                    ->with('login_success', true);
             }
-
-            return redirect()->intended('/dashboard');
+        } catch (\Exception $e) {
+            \Log::error('Login error: ' . $e->getMessage());
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
         }
 
         // Increment failed attempts
@@ -66,6 +86,16 @@ class LoginController extends Controller
         throw ValidationException::withMessages([
             'email' => __('auth.failed'),
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 
     protected function hasTooManyLoginAttempts(Request $request)
