@@ -13,7 +13,9 @@
         <div class="box">
             <h2 class="text-2xl font-bold mb-6">Latest Exercise</h2>
             @if($latestExercise->image_path)
-                <img src="{{ asset($latestExercise->image_path) }}" alt="Exercise" class="exercise-img">
+                <img src="{{ asset('storage/' . $latestExercise->image_path) }}"
+                     alt="Exercise"
+                     class="w-full max-h-[300px] object-cover rounded-lg my-4">
             @endif
 
             <div class="exercise-content">

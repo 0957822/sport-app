@@ -35,7 +35,7 @@
         @foreach($exercises as $exercise)
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
                 @if($exercise->image_path)
-                    <img src="{{ asset($exercise->image_path) }}"
+                    <img src="{{ asset('storage/' . $exercise->image_path) }}"
                          alt="{{ $exercise->title }}"
                          class="w-full h-48 object-cover">
                 @endif
