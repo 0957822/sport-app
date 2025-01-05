@@ -45,28 +45,30 @@
             <!-- Right side navigation -->
             <div class="flex items-center space-x-4">
                 @auth
+                    @if(auth()->user() && auth()->user()->isAdmin())
+                        <a href="{{ route('admin.index') }}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                            Admin
+                        </a>
+                    @endif
                     <div class="flex items-center space-x-2">
                         <img src="{{ auth()->user()->avatar
-                        ? Storage::url(auth()->user()->avatar)
-                        : asset('avatars/default-avatar.jpg') }}"
+                ? Storage::url(auth()->user()->avatar)
+                : asset('avatars/default-avatar.jpg') }}"
                              alt="Profile picture"
                              class="w-8 h-8 rounded-full object-cover">
                         <span class="text-gray-800">Hi, {{ auth()->user()->name }}</span>
                     </div>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
-                        <button type="submit"
-                                class="text-gray-800 hover:text-blue-500">
+                        <button type="submit" class="text-gray-800 hover:text-blue-500">
                             Logout
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}"
-                       class="text-gray-800 hover:text-blue-500">
+                    <a href="{{ route('login') }}" class="text-gray-800 hover:text-blue-500">
                         Login
                     </a>
-                    <a href="{{ route('register') }}"
-                       class="text-gray-800 hover:text-blue-500">
+                    <a href="{{ route('register') }}" class="text-gray-800 hover:text-blue-500">
                         Register
                     </a>
                 @endauth

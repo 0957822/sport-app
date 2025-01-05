@@ -100,16 +100,19 @@
                                 <div class="p-4">
                                     <h3 class="font-bold text-lg mb-2">{{ $exercise->title }}</h3>
                                     <p class="text-gray-600 mb-4">{{ Str::limit($exercise->description, 100) }}</p>
-                                    <a href="{{ route('exercises.show', $exercise->id) }}"
-                                       class="text-blue-600 hover:text-blue-800">
-                                        View Details
-                                    </a>
+                                    <div class="flex gap-2">
+                                        <a href="{{ route('exercises.show', $exercise->id) }}"
+                                           class="flex-1 text-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                                            Details
+                                        </a>
+                                        <a href="{{ route('exercises.edit', $exercise->id) }}"
+                                           class="flex-1 text-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                                            Edit
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
-                    </div>
-                    <div class="mt-4">
-                        {{ $exercises->links() }}
                     </div>
                 @else
                     <p class="text-gray-500">You haven't created any exercises yet.</p>

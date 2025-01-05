@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Exercise;
+use Illuminate\Support\Facades\Storage;
 
 class ExercisesController extends Controller
 {
     public function exercises(Request $request)
     {
         $query = Exercise::query();
-        $tags = ['Strength', 'Cardio', 'Flexibility', 'Balance', 'HIIT'];
+        $tags = ['Strength', 'Cardio', 'Yoga', 'Stretch', 'HIIT'];
 
         if ($request->search) {
             $query->where('title', 'like', "%{$request->search}%");
@@ -44,6 +45,41 @@ class ExercisesController extends Controller
 
         $tags = ['Compound', 'Isolation', 'Strength', 'HIIT', 'Yoga', 'Cardio', 'Stretch'];
         return view('pages.exercises.create', compact('tags'));
+    }
+
+    public function edit(Exercise $exercise)
+    {
+        // Security check
+        abort_if(auth()->id() !== $exercise->user_id, 403);
+
+        $tags = ['Compound', 'Isolation', 'Strength', 'HIIT', 'Yoga', 'Cardio', 'Stretch'];
+        return view('pages.exercises.edit', compact('exercise', 'tags'));
+    }
+
+    public function update(Request $request, Exercise $exercise)
+    {
+        // Security check
+        abort_if(auth()->id() !== $exercise->user_id, 403);
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'tags' => ['required', 'array'],
+            'image' => ['nullable', 'image', 'max:2048'],
+        ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if ($exercise->image_path) {
+                Storage::disk('public')->delete($exercise->image_path);
+            }
+            $validated['image_path'] = $request->file('image')->store('exercises', 'public');
+        }
+
+        $exercise->update($validated);
+
+        return redirect()->route('exercises.show', $exercise)
+            ->with('success', 'Exercise updated successfully');
     }
 
     public function store(Request $request)

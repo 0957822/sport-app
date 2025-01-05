@@ -10,8 +10,9 @@ class Exercise extends Model
         'title',
         'description',
         'image_path',
+        'tags',
         'user_id',
-        'tags'
+        'is_active'
     ];
 
     protected $casts = [
