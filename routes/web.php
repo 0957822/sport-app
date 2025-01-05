@@ -41,19 +41,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/exercises/{exercise}/edit', [ExercisesController::class, 'edit'])->name('exercises.edit');
     Route::put('/exercises/{exercise}', [ExercisesController::class, 'update'])->name('exercises.update');
 
-// Admin routes (inside the auth middleware group)
-    Route::prefix('admin')->middleware('admin')->group(function () {
-        Route::get('/', [AdminController::class, 'index'])->name('admin.index');
-        Route::post('/exercises/{exercise}/toggle', [AdminController::class, 'toggleExercise'])->name('admin.toggle-exercise');
-        Route::get('/exercises/{exercise}/edit', [AdminController::class, 'editExercise'])->name('admin.edit-exercise');
-        Route::put('/exercises/{exercise}', [AdminController::class, 'updateExercise'])->name('admin.update-exercise');
-        Route::delete('/exercises/{exercise}', [AdminController::class, 'deleteExercise'])->name('admin.delete-exercise');
+    //Admin routes
+    Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('index');
+        Route::post('/exercises/{exercise}/toggle', [AdminController::class, 'toggleExercise'])->name('toggle-exercise');
+        Route::get('/exercises/{exercise}/edit', [AdminController::class, 'editExercise'])->name('edit-exercise');
+        Route::put('/exercises/{exercise}', [AdminController::class, 'updateExercise'])->name('update-exercise');
+        Route::delete('/exercises/{exercise}', [AdminController::class, 'deleteExercise'])->name('delete-exercise');
     });
 
     // Logout route
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     });
 
-    // This needs to be after the protected routes
+
     Route::get('/exercises/{id}', [ExercisesController::class, 'show'])->name('exercises.show');
 
